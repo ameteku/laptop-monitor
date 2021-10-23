@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 class CameraFeed extends StatefulWidget {
   CameraFeed({Key? key}) : super(key: key);
@@ -11,7 +12,10 @@ class CameraFeed extends StatefulWidget {
 class _CameraFeedState extends State<CameraFeed> {
   CameraDescription? camera;
   CameraController? _controller;
-  String text = "hi";
+  String _cameraStatus = "hi";
+  bool _showVideoFeed = false;
+  CameraPreview? preview;
+  final _localRenderer = RTCVideoRenderer();
 
   Future<bool> initializeCamera() async {
     // Obtain a list of the available cameras on the device.
@@ -19,19 +23,20 @@ class _CameraFeedState extends State<CameraFeed> {
     await availableCameras().then((value) async {
       print("getting cameras $value");
       setState(() {
-        text = value.toString();
+        _cameraStatus = value.toString();
       });
       camera = value.first;
       _controller = CameraController(camera!, ResolutionPreset.medium);
       await _controller!.initialize();
+      preview = CameraPreview(_controller!);
       setState(() {
-        text = "done initing controller";
+        _cameraStatus = "Camera is Recording";
       });
       return true;
     }).onError((error, stackTrace) {
       print(error);
       setState(() {
-        text = error.toString() + stackTrace.toString();
+        _cameraStatus = error.toString() + stackTrace.toString();
       });
       return false;
     });
@@ -42,8 +47,25 @@ class _CameraFeedState extends State<CameraFeed> {
 
   @override
   void initState() {
-    initializeCamera();
+    // initializeCamera();
+
+    initRenderer();
+    _getUserMedia();
     super.initState();
+  }
+
+  _getUserMedia() async {
+    final Map<String, dynamic> constraints = {
+      'audio': true,
+      'video': {"facingMode": "user"}
+    };
+
+    MediaStream stream = await navigator.getUserMedia(constraints);
+    _localRenderer.srcObject = stream;
+  }
+
+  void initRenderer() async {
+    await _localRenderer.initialize();
   }
 
   @override
@@ -54,12 +76,28 @@ class _CameraFeedState extends State<CameraFeed> {
           print("In init ${snapshot.data}");
           if (snapshot.hasData) {
             if (snapshot.data == false) {
-              return Text(text);
+              return Text(_cameraStatus);
             }
-            return CameraPreview(_controller!);
+            return Column(
+              children: [
+                Switch(
+                    value: _showVideoFeed,
+                    onChanged: (value) {
+                      setState(() {
+                        _showVideoFeed = value;
+                      });
+                    }),
+                _showVideoFeed
+                    ? Container(
+                        height: MediaQuery.of(context).size.height * .3,
+                        width: MediaQuery.of(context).size.width * .3,
+                        child: RTCVideoView(_localRenderer))
+                    : Text(_cameraStatus),
+              ],
+            );
           } else {
             return Center(
-              child: Text(text),
+              child: Text(_cameraStatus),
             );
           }
         });
@@ -68,7 +106,8 @@ class _CameraFeedState extends State<CameraFeed> {
   @override
   void dispose() {
     // Dispose of the controller when the widget is disposed.
-    _controller?.dispose();
+    if (_controller != null) _controller?.dispose();
+    _localRenderer.dispose();
     super.dispose();
   }
 }
