@@ -1,20 +1,21 @@
-import 'package:camera/camera.dart';
+import 'dart:async';
+import 'dart:typed_data';
+
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 class CameraFeed {
-  final CameraController controller;
+  //final CameraController controller;
+  final MediaStreamTrack streamTrack;
+  CameraFeed({
+    required this.streamTrack,
+  });
 
-  CameraFeed({required this.controller});
+  //this captures a frame from the cam feed and returns a bytebuffer of the frame
+  Future<ByteBuffer> captureCameraFeedFrame() async {
+    return await streamTrack.captureFrame().then((value) => value);
+  }
 
-  void recordVideo() {
-    XFile? recordedVideo;
-    controller.startVideoRecording();
-
-    Future.delayed(Duration(microseconds: 100), () async {
-      recordedVideo = await controller.stopVideoRecording();
-    });
-
-    if (recordedVideo != null) {
-      // recordedVideo.saveTo(path)
-    }
+  Stream<ByteBuffer> createCameraBufferStream() async* {
+    StreamSink<ByteBuffer> bufferSink;
   }
 }
