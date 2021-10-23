@@ -17,6 +17,7 @@ class _CameraFeedState extends State<CameraFeed> {
   CameraPreview? preview;
   final _localRenderer = RTCVideoRenderer();
 
+  //this initializes the camera in the camera plugin
   Future<bool> initializeCamera() async {
     // Obtain a list of the available cameras on the device.
     if (_controller != null) return true;
@@ -54,6 +55,7 @@ class _CameraFeedState extends State<CameraFeed> {
     super.initState();
   }
 
+  //gets the camera and audio source from device
   _getUserMedia() async {
     final Map<String, dynamic> constraints = {
       'audio': true,
