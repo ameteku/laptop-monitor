@@ -11,25 +11,38 @@ class CameraFeed extends StatefulWidget {
 class _CameraFeedState extends State<CameraFeed> {
   CameraDescription? camera;
   CameraController? _controller;
+  String text = "hi";
 
-  Future<CameraController?> initializeCamera() async {
+  Future<bool> initializeCamera() async {
     // Obtain a list of the available cameras on the device.
+    if (_controller != null) return true;
     await availableCameras().then((value) async {
       print("getting cameras $value");
+      setState(() {
+        text = value.toString();
+      });
       camera = value.first;
       _controller = CameraController(camera!, ResolutionPreset.medium);
       await _controller!.initialize();
-      return _controller;
+      setState(() {
+        text = "done initing controller";
+      });
+      return true;
     }).onError((error, stackTrace) {
       print(error);
+      setState(() {
+        text = error.toString() + stackTrace.toString();
+      });
+      return false;
     });
     print("_controller is null");
 
-    return _controller;
+    return false;
   }
 
   @override
   void initState() {
+    initializeCamera();
     super.initState();
   }
 
@@ -37,13 +50,16 @@ class _CameraFeedState extends State<CameraFeed> {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: initializeCamera(),
-        builder: (context, AsyncSnapshot<CameraController?> snapshot) {
+        builder: (context, AsyncSnapshot<bool> snapshot) {
           print("In init ${snapshot.data}");
-          if (snapshot.connectionState == ConnectionState.active) {
+          if (snapshot.hasData) {
+            if (snapshot.data == false) {
+              return Text(text);
+            }
             return CameraPreview(_controller!);
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Center(
+              child: Text(text),
             );
           }
         });
