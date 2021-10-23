@@ -1,16 +1,12 @@
 # laptopmonitor
 
-A new Flutter project.
+Progress:
+Successfully connect to camera feed from flutter web using webrtc
+Displaying the video feed to user
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+todo:
+Stream feed and get byte data
+Create eventChannel to send over bytedata to python backend code
+Test with old python backend code
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
