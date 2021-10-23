@@ -7,7 +7,7 @@ Displaying the video feed to user
 
 
 
-#Todo:#
+*Todo:*
 
 Stream feed and get byte data
 
