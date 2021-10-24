@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
             margin: const EdgeInsets.symmetric(horizontal: 10),
             height: MediaQuery.of(context).size.height * .50,
             padding: const EdgeInsets.all(5),
-            child: CameraFeed(),
+            child: VideoMediaDisplay(),
           )
         ],
       ),
