@@ -9,10 +9,24 @@ class ImageServer {
   //a function for getting data from the feed every x seconds
   //a function to sending over the image gotten to the server
 
+  bool started;
   final CameraFeedService _cameraFeedService;
   List<Uint8List> _currentRawImageData;
 
-  ImageServer(this._cameraFeedService) : _currentRawImageData = [];
+  ImageServer(this._cameraFeedService)
+      : _currentRawImageData = [],
+        started = false;
+
+  //starts recording and sending ovwer data
+  void start() {
+    if (started) return;
+    started = true;
+    while (true) {
+      grabImagesForSession(const Duration(seconds: 2)).then((value) {
+        print("Finished 1 session : ${_currentRawImageData.length}");
+      });
+    }
+  }
 
   Future<void> grabImagesForSession(Duration sessionLength) async {
     int frameCount = 0;
@@ -28,6 +42,7 @@ class ImageServer {
       } else {
         //appends the frame to the list of frames
         _currentRawImageData.add(rawData);
+        print("added: ${rawData.length}");
       }
       //increment
       frameCount++;
