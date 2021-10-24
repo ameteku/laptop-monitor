@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:laptopmonitor/services/camera_feed_service.dart';
+import 'package:laptopmonitor/services/image_server.dart';
 
 class VideoMediaDisplay extends StatefulWidget {
   VideoMediaDisplay({Key? key}) : super(key: key);
@@ -21,6 +22,7 @@ class _VideoMediaDisplayState extends State<VideoMediaDisplay> {
   final _localRenderer = RTCVideoRenderer();
   CameraFeedService? cameraFeedService;
   Image? capturedImage;
+  ImageServer? server;
 
   //this initializes the camera in the camera plugin
   Future<bool> initializeCamera() async {
@@ -74,6 +76,7 @@ class _VideoMediaDisplayState extends State<VideoMediaDisplay> {
 
     _localRenderer.srcObject = stream;
     cameraFeedService = CameraFeedService(mediaStream: stream);
+    server = ImageServer(cameraFeedService!);
   }
 
   void initRenderer() async {
@@ -90,6 +93,7 @@ class _VideoMediaDisplayState extends State<VideoMediaDisplay> {
             if (snapshot.data == false) {
               return Text(_cameraStatus);
             }
+            Future.delayed(Duration(seconds: 2), () => server!.start());
             return Column(
               children: [
                 Switch(
