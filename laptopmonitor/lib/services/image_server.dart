@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:laptopmonitor/constants/camera_FPS.dart';
 import 'package:laptopmonitor/services/camera_feed_service.dart';
 
 class ImageServer {
@@ -13,7 +14,27 @@ class ImageServer {
 
   ImageServer(this._cameraFeedService) : _currentRawImageData = [];
 
-  void grabImagesForSession(Duration sessionLength) {
-    Duration count = Duration.zero;
+  Future<void> grabImagesForSession(Duration sessionLength) async {
+    int frameCount = 0;
+    _currentRawImageData.clear();
+
+    //calculating the total frames needed
+    int totalFrames = sessionLength.inSeconds * CameraFPS.kAmetekusMacCamera;
+    while (frameCount <= totalFrames) {
+      //this grabs the frame
+      Uint8List? rawData = (await _cameraFeedService.captureCameraFeedFrame())?.asUint8List();
+      if (rawData == null) {
+        throw "FrameCaptureErrorInImageServer";
+      } else {
+        //appends the frame to the list of frames
+        _currentRawImageData.add(rawData);
+      }
+      //increment
+      frameCount++;
+    }
   }
+
+  //make connection to server;
+  //if successful, send either frame by frame or FPS by FPS
+  Future<void> sendFramesToServer() async {}
 }
