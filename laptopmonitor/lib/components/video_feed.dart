@@ -1,21 +1,23 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:laptopmonitor/services/camera_feed_service.dart';
 
-class CameraFeed extends StatefulWidget {
-  CameraFeed({Key? key}) : super(key: key);
+class VideoMediaDisplay extends StatefulWidget {
+  VideoMediaDisplay({Key? key}) : super(key: key);
 
   @override
-  State<CameraFeed> createState() => _CameraFeedState();
+  State<VideoMediaDisplay> createState() => _VideoMediaDisplayState();
 }
 
-class _CameraFeedState extends State<CameraFeed> {
+class _VideoMediaDisplayState extends State<VideoMediaDisplay> {
   CameraDescription? camera;
   CameraController? _controller;
   String _cameraStatus = "hi";
   bool _showVideoFeed = false;
   CameraPreview? preview;
   final _localRenderer = RTCVideoRenderer();
+  CameraFeedService? cameraFeedService;
 
   //this initializes the camera in the camera plugin
   Future<bool> initializeCamera() async {
@@ -27,9 +29,12 @@ class _CameraFeedState extends State<CameraFeed> {
         _cameraStatus = value.toString();
       });
       camera = value.first;
+
       _controller = CameraController(camera!, ResolutionPreset.medium);
       await _controller!.initialize();
       preview = CameraPreview(_controller!);
+      //cameraFeedService = CameraFeedService(mediaStream: _controller. );
+
       setState(() {
         _cameraStatus = "Camera is Recording";
       });
@@ -48,8 +53,7 @@ class _CameraFeedState extends State<CameraFeed> {
 
   @override
   void initState() {
-    // initializeCamera();
-
+    //  initializeCamera();
     initRenderer();
     _getUserMedia();
     super.initState();
@@ -62,8 +66,11 @@ class _CameraFeedState extends State<CameraFeed> {
       'video': {"facingMode": "user"}
     };
 
-    MediaStream stream = await navigator.getUserMedia(constraints);
+    //casting the web implementation of MediaStream
+    MediaStream stream = await navigator.mediaDevices.getUserMedia(constraints);
+
     _localRenderer.srcObject = stream;
+    cameraFeedService = CameraFeedService(mediaStream: stream);
   }
 
   void initRenderer() async {
@@ -84,13 +91,19 @@ class _CameraFeedState extends State<CameraFeed> {
               children: [
                 Switch(
                     value: _showVideoFeed,
-                    onChanged: (value) {
+                    onChanged: (value) async {
+                      _cameraStatus = await cameraFeedService!
+                          .captureCameraFeedFrame()
+                          .then((value) => value.toString())
+                          .onError((error, stackTrace) => "Error ${error.toString()}");
+                      print("Frame captured is $_cameraStatus");
+
                       setState(() {
                         _showVideoFeed = value;
                       });
                     }),
                 _showVideoFeed
-                    ? Container(
+                    ? SizedBox(
                         height: MediaQuery.of(context).size.height * .3,
                         width: MediaQuery.of(context).size.width * .3,
                         child: RTCVideoView(_localRenderer))
