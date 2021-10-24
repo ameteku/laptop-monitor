@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
@@ -18,6 +20,7 @@ class _VideoMediaDisplayState extends State<VideoMediaDisplay> {
   CameraPreview? preview;
   final _localRenderer = RTCVideoRenderer();
   CameraFeedService? cameraFeedService;
+  Image? capturedImage;
 
   //this initializes the camera in the camera plugin
   Future<bool> initializeCamera() async {
@@ -92,22 +95,29 @@ class _VideoMediaDisplayState extends State<VideoMediaDisplay> {
                 Switch(
                     value: _showVideoFeed,
                     onChanged: (value) async {
-                      _cameraStatus = await cameraFeedService!
+                      Uint8List imageBlob = await cameraFeedService!
                           .captureCameraFeedFrame()
-                          .then((value) => value.toString())
-                          .onError((error, stackTrace) => "Error ${error.toString()}");
+                          .then((value) => value!.buffer.asUint8List())
+                          .catchError((error, stackTrace) => print("Error ${error.toString()}"));
+
+                      _cameraStatus = imageBlob.toString();
+                      capturedImage = Image.memory(imageBlob);
                       print("Frame captured is $_cameraStatus");
 
+                      // await cameraFeedService!.recordFiveSecondVideoStream();
                       setState(() {
                         _showVideoFeed = value;
                       });
                     }),
+                //later on change to use visibility widget to make video disappear
                 _showVideoFeed
                     ? SizedBox(
                         height: MediaQuery.of(context).size.height * .3,
                         width: MediaQuery.of(context).size.width * .3,
                         child: RTCVideoView(_localRenderer))
-                    : Text(_cameraStatus),
+                    : capturedImage != null
+                        ? capturedImage!
+                        : Text(_cameraStatus),
               ],
             );
           } else {
