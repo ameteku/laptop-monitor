@@ -18,9 +18,9 @@ class CameraFeedService {
   }
 
   //this captures a frame from the cam feed and returns a bytebuffer of the frame
-  Future<ByteData?> captureCameraFeedFrame() async {
+  Future<ByteBuffer?> captureCameraFeedFrame() async {
     currentTrack?.enabled = true;
-    ByteData? data=  await currentTrack?.captureFrame().then((value) => ByteData.view(value)).catchError((error, stackTrace) {
+    ByteBuffer? data=  await currentTrack?.captureFrame().then((value) => value).catchError((error, stackTrace) {
       print("Error in capture image 22 : ${error.toString()} ${stackTrace.toString()}")});
 
     return data;

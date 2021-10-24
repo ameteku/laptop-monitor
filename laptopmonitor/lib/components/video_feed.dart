@@ -97,7 +97,7 @@ class _VideoMediaDisplayState extends State<VideoMediaDisplay> {
                     onChanged: (value) async {
                       Uint8List imageBlob = await cameraFeedService!
                           .captureCameraFeedFrame()
-                          .then((value) => value!.buffer.asUint8List())
+                          .then((value) => value!.asUint8List())
                           .catchError((error, stackTrace) => print("Error ${error.toString()}"));
 
                       _cameraStatus = imageBlob.toString();
