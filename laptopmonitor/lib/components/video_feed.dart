@@ -93,7 +93,6 @@ class _VideoMediaDisplayState extends State<VideoMediaDisplay> {
             if (snapshot.data == false) {
               return Text(_cameraStatus);
             }
-            Future.delayed(Duration(seconds: 2), () => server!.start());
             return Column(
               children: [
                 Switch(
@@ -107,7 +106,8 @@ class _VideoMediaDisplayState extends State<VideoMediaDisplay> {
                       _cameraStatus = imageBlob.toString();
                       capturedImage = Image.memory(imageBlob);
                       print("Frame captured is $_cameraStatus");
-
+                      // server!.grabImagesForSession(Duration(seconds: 2));
+                      server!.start();
                       // await cameraFeedService!.recordFiveSecondVideoStream();
                       setState(() {
                         _showVideoFeed = value;

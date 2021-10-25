@@ -18,17 +18,16 @@ class ImageServer {
         started = false;
 
   //starts recording and sending ovwer data
-  void start() {
+  Future<void> start() async {
     if (started) return;
     started = true;
     while (true) {
-      grabImagesForSession(const Duration(seconds: 2)).then((value) {
-        print("Finished 1 session : ${_currentRawImageData.length}");
-      });
+      bool value = await grabImagesForSession(const Duration(seconds: 2));
+      print("completed 1 session?: $value");
     }
   }
 
-  Future<void> grabImagesForSession(Duration sessionLength) async {
+  Future<bool> grabImagesForSession(Duration sessionLength) async {
     int frameCount = 0;
     _currentRawImageData.clear();
 
@@ -42,11 +41,14 @@ class ImageServer {
       } else {
         //appends the frame to the list of frames
         _currentRawImageData.add(rawData);
-        print("added: ${rawData.length}");
+        // print("added: ${rawData.length}");
       }
       //increment
       frameCount++;
     }
+
+    print("Finished a session with ${_currentRawImageData.length}");
+    return true;
   }
 
   //make connection to server;
