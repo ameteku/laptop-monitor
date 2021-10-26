@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:http/http.dart' as http;
 import 'package:laptopmonitor/constants/camera_FPS.dart';
 import 'package:laptopmonitor/services/camera_feed_service.dart';
 
@@ -21,10 +23,17 @@ class ImageServer {
   Future<void> start() async {
     if (started) return;
     started = true;
-    while (true) {
-      bool value = await grabImagesForSession(const Duration(seconds: 2));
-      print("completed 1 session?: $value");
+    // while (true) {
+    bool value = await grabImagesForSession(const Duration(seconds: 1));
+    if (value) {
+      Uri imageServerLink = Uri.parse("http://localhost:3000/image-batch/");
+      var response = await http.post(imageServerLink,
+          headers: {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"},
+          body: {"imageData": jsonEncode(_currentRawImageData ?? "Hi")});
+      print("completed 1 session?: ${response.statusCode} ${response.body}");
     }
+
+    // }
   }
 
   Future<bool> grabImagesForSession(Duration sessionLength) async {
