@@ -1,9 +1,11 @@
-import 'dart:async';
+
 import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 
+
+//class for setting processing camera streams
 class CameraFeedService {
    CameraController? controller;
   final MediaStream? mediaStream;
@@ -51,16 +53,4 @@ class CameraFeedService {
    print("Chunks gotten: ${dataChunks.toString()}");
 
   }
-
-
-
-
-  //
-  // Stream<ByteBuffer> createCameraBufferStream() async* {
-  //   StreamSink<ByteBuffer> bufferSink = ;
-  //
-  //   yield bufferSink;
-  // }
-
-  //successfully getting camera feed
 }
