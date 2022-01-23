@@ -31,8 +31,10 @@ dependencies:
   camera: ^0.9.4+2
   camera_web: ^0.2.1+1
   flutter_webrtc: ^0.7.0+hotfix.2
+  http: ^0.13.4
   path_provider: ^2.0.5
   path: ^1.8.0
+  rxdart: ^0.27.3
   flutter:
     sdk: flutter
 
