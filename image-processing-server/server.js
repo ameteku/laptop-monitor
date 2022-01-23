@@ -2,6 +2,10 @@ const express = require('express');
 const cors = require("cors");
 
 const app = express();
+
+const ImageParser = require("./image-parser");
+
+//const imageParser = ImageParser.ImageParser;
 app.use(cors())
 
 app.use(express.json({limit : '50mb'}))

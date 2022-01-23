@@ -11,5 +11,5 @@ if there is a req to connect,
 
 
 
-usefol links :
+useful links :
 https://stackoverflow.com/questions/11926421/sending-multiple-images-over-socket
