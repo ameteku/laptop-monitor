@@ -4,13 +4,13 @@ import VideoResultsContainer, { Result } from "../models/videoResultsContainer";
 export default class CameraClientService {
     private videoContainer: VideoContainer;
     private videoResults: VideoResultsContainer;
-    clientId: number;
+    id: number;
     static dangerDistance = 1;
 
     constructor(id: number) {
         this.videoContainer = new VideoContainer();
         this.videoResults = new VideoResultsContainer();
-        this.clientId = id;
+        this.id = id;
     }
 
     addVideoFeed(feed: Array<videoFrame>): void {
@@ -39,7 +39,7 @@ export default class CameraClientService {
     }
 
     processResults(): void {
-        
+
     }
 
     sendProcessedResult(): void {
