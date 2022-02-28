@@ -36,9 +36,9 @@ app.post("/connect", (req, res) => {
 app.post("/addVideoFeed", (req, res) => {
     console.log("Called");
     try {
-        const body = JSON.parse(req.body);
-        console.log(body.frames);
-
+        console.log(req.body);
+        const body = req.body;
+       
         //get data, then validate, then pass on to clientDelegate to store and call for start to process.
         if (body.frames === null || body.frames === undefined || body.id == null || body.id == undefined) {
             res.status(503).send({

@@ -21,7 +21,7 @@ export default class CameraClientService {
         this.videoContainer.appendImages(feed);
     }
 
-    processFrames(): void {
+    async processFrames(): Promise<void> {
          //start by getting a frame
         let frame = this.videoContainer.popQueue;
 
