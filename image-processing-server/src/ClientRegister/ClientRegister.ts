@@ -39,11 +39,11 @@ export default class ClientRegister {
         const serviceId = this.registeredClients.get(clientId)?.id;
 
         if(serviceId == null) return null;
-        
+
         return serviceId;
     }
 
-    getClientService(clientId: number): CameraClientService | null {
+    getClientService(clientId: string): CameraClientService | null {
         return  this.registeredClients[clientId];
     }
 
