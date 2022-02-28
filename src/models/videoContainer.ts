@@ -20,7 +20,7 @@ export default class VideoContainer {
     }
 
     //removes the last image and return
-    get popQueue(): videoFrame | null {
+get popQueue(): videoFrame | null {
 
         if(this.count > 0) {
             const tempImageData = this.ImageQueue.shift();
