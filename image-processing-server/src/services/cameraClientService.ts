@@ -38,12 +38,12 @@ export default class CameraClientService {
         }
     }
 
-    processResults(): void {
+    processResult(): void {
 
     }
 
-    sendProcessedResult(): void {
-
+    getResults(): Array<Result>  {
+        return [];
     }
 
 }
