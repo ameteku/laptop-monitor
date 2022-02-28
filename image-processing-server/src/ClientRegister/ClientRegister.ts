@@ -44,7 +44,7 @@ export default class ClientRegister {
     }
 
     getClientService(clientId: string): CameraClientService | null {
-        return  this.registeredClients[clientId];
+        return  this.registeredClients.get(clientId);
     }
 
     removeClientServiceId(clientId: string): void {
