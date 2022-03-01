@@ -16,11 +16,14 @@ class ImageServer {
   BehaviorSubject<bool> started;
   final CameraFeedService _cameraFeedService;
   List<Uint8List> _currentRawImageData;
-  Uri kServerLink = Uri.parse("http://localhost:3000/image-batch/");
+  String kServerBaseLink = "http://localhost:3000";
+  String? id;
 
   ImageServer(this._cameraFeedService)
       : _currentRawImageData = [],
-        started = BehaviorSubject.seeded(false);
+        started = BehaviorSubject.seeded(false) {
+    connectToServer();
+  }
 
   //starts recording and sending owner data
   Future<void> startSending() async {
@@ -66,12 +69,21 @@ class ImageServer {
   }
 
   //make connection to server;
+  Future<void> connectToServer() async {
+    var response = await http.post(Uri.parse(kServerBaseLink + '/connect'),
+        headers: {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"});
+    print("established connection? : ${response.statusCode} ${response.body}");
+    if (response.statusCode == 200) {
+      id = jsonDecode(response.body)["id"];
+    }
+  }
+
   //if successful, send either frame by frame or FPS by FPS
   Future<void> sendFramesToServer() async {
     if (_currentRawImageData.isEmpty) return;
-    var response = await http.post(kServerLink,
-        headers: {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"},
-        body: {"imageData": jsonEncode(_currentRawImageData)});
-    debugPrint("completed 1 session?: ${response.statusCode} ${response.body}");
+    var jsonData = {"frames": jsonEncode(_currentRawImageData), "id": id};
+    var response = await http.post(Uri.parse(kServerBaseLink + '/addVideoFeed'),
+        headers: {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"}, body: jsonData);
+    print("completed 1 session?: ${response.statusCode} ${response.body}");
   }
 }

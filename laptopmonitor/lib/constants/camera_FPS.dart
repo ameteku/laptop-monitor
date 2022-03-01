@@ -1,3 +1,3 @@
 class CameraFPS {
-  static const int kAmetekusMacCamera = 10;
+  static const int kAmetekusMacCamera = 5;
 }

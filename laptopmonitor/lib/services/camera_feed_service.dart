@@ -24,7 +24,7 @@ class CameraFeedService {
     currentTrack?.enabled = true;
     ByteBuffer? data=  await currentTrack?.captureFrame().then((value) => value).catchError((error, stackTrace) {
       print("Error in capture image 22 : ${error.toString()} ${stackTrace.toString()}")});
-
+    print("image captures is:" + (data).toString());
     return data;
   }
 
