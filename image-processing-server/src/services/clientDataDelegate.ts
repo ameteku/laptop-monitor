@@ -1,9 +1,11 @@
 import ClientRegister from "../ClientRegister/ClientRegister";
 import { videoFrame } from "../models/videoContainer";
 import { Result } from "../models/videoResultsContainer";
+import DBConnector from "./dbConnector";
 
 export default class ClientDataDelegate {
     register: ClientRegister;
+
     constructor(register: ClientRegister) {
         this.register = register;
     }
@@ -11,7 +13,7 @@ export default class ClientDataDelegate {
     addVideo(clientId: string, videoFrames: Array<videoFrame>): boolean {
        const clientService = this.register.getClientService(clientId);
         if(clientService == null) {
-            console.log("service doesnot exits", clientService, "with: ", this.register);
+            console.log("service does not exits", clientService, "in register: ", this.register);
             return false;
         }
        
