@@ -1,5 +1,5 @@
-import { initializeApp, applicationDefault, cert } from 'firebase-admin/app';
-import { getFirestore, Timestamp, FieldValue } from 'firebase-admin/firestore';
+import { initializeApp, cert } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
 import type dbConstants from '../constants/dbConstants';
 import { Result } from '../models/videoResultsContainer';
 
@@ -54,11 +54,15 @@ export default class DBConnector {
         return await DBConnector.db.collection(params.collectionPath).doc(params.docId).update(params.json).then(result => {
             return true;
         }).catch(error => {
-            console.log("Update error occured" + error);
+            console.log("Update was not successful, trying to create new doc" + error);
+
             return this.addDocument({
                 doc: params.json,
                 collectionPath: params.collectionPath,
                 docId: params.docId
+            }).catch(error => {
+                console.log("Could not create new doc also with error", error );
+                return false;
             });
         })
     }
