@@ -41,7 +41,7 @@ class _VideoMediaDisplayState extends State<VideoMediaDisplay> {
       });
       camera = value.first;
 
-      _controller = CameraController(camera!, ResolutionPreset.medium);
+      _controller = CameraController(camera!, ResolutionPreset.low);
       await _controller!.initialize();
       preview = CameraPreview(_controller!);
       //cameraFeedService = CameraFeedService(mediaStream: _controller. );
@@ -65,7 +65,6 @@ class _VideoMediaDisplayState extends State<VideoMediaDisplay> {
   //gets the camera and audio source from device
   _getUserMediaPermissions() async {
     final Map<String, dynamic> constraints = {
-      'audio': true,
       'video': {"facingMode": "user"}
     };
 

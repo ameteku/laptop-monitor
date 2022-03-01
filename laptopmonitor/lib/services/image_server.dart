@@ -81,9 +81,9 @@ class ImageServer {
   //if successful, send either frame by frame or FPS by FPS
   Future<void> sendFramesToServer() async {
     if (_currentRawImageData.isEmpty) return;
+    var jsonData = {"frames": jsonEncode(_currentRawImageData), "id": id};
     var response = await http.post(Uri.parse(kServerBaseLink + '/addVideoFeed'),
-        headers: {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"},
-        body: {"frames": jsonEncode(_currentRawImageData), "id": id});
+        headers: {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"}, body: jsonData);
     print("completed 1 session?: ${response.statusCode} ${response.body}");
   }
 }
