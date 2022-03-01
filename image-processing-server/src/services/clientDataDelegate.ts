@@ -16,13 +16,15 @@ export default class ClientDataDelegate {
         }
        
         clientService.addVideoFeed(videoFrames);
-        //clientService.processFrames();
+        clientService.processFrames();
         return true;
     }
 
     getResults(clientId: string): Array<Result>  {
         const clientService = this.register.getClientService(clientId);
+
         if(clientService == null) {
+            console.log("No client with id");
             return null;
         }
        
