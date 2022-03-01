@@ -36,7 +36,6 @@ app.post("/connect", (req, res) => {
 app.post("/addVideoFeed", (req, res) => {
     console.log("Called");
     try {
-        console.log(req.body);
         const body = req.body;
        
         //get data, then validate, then pass on to clientDelegate to store and call for start to process.
@@ -47,7 +46,7 @@ app.post("/addVideoFeed", (req, res) => {
             });
         }
 
-        const isSuccessful = clientDelegate.addVideo(body.id, body.frames);
+        const isSuccessful = clientDelegate.addVideo(body.id, JSON.parse(body.frames));
         if (isSuccessful) {
             res.status(200).send(true);
         }
