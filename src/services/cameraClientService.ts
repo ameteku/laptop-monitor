@@ -35,15 +35,13 @@ export default class CameraClientService {
                 distanceFromCamera: 10
             }
             this.videoResults.appendResult(result);
+            frame = this.videoContainer.popQueue;
         }
-    }
-
-    processResult(): void {
-
+        console.log('Done processing with: ', this.videoResults.totalResultsCount);
     }
 
     getResults(): Array<Result>  {
-        return [];
+        return this.videoResults.allResults;
     }
 
 }
