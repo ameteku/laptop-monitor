@@ -1,3 +1,3 @@
-type  dbConstants =  "userResultds" | "userMessages";
+type  dbConstants =  "userResults" | "userMessages";
 
 export default dbConstants;
