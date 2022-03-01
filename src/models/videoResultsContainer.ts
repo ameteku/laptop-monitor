@@ -40,5 +40,6 @@ export default class VideoResultsContainer {
 
 export type Result = {
     containsHuman?: boolean;
-    distanceFromCamera?: number ;
+    distanceFromCamera?: number;
+    timestamp?: Date;
 }
