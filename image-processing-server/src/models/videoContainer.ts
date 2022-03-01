@@ -16,7 +16,6 @@ export default class VideoContainer {
 
             this.ImageQueue.push(...imageData);
             this.count += imageData.length;
-            console.log("Added data to imageList" + this.ImageQueue);
     }
 
     //removes the last image and return
