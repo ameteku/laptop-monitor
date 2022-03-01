@@ -13,7 +13,7 @@ export default class ClientDataDelegate {
     addVideo(clientId: string, videoFrames: Array<videoFrame>): boolean {
        const clientService = this.register.getClientService(clientId);
         if(clientService == null) {
-            console.log("service does not exits", clientService, "in register: ", this.register);
+            console.log("service does not exist", clientService, "in register: ", this.register);
             return false;
         }
        
