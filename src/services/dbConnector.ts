@@ -7,11 +7,6 @@ export default class DBConnector {
     static db: FirebaseFirestore.Firestore;
 
     constructor() {
-        const serviceAccount = require('../../lapnitor-firebase-adminsdk-trb25-09a07e1d3d.json');
-
-        initializeApp({
-            credential: cert(serviceAccount)
-        });
 
         if(DBConnector.db === undefined) {
             DBConnector.db = getFirestore();
