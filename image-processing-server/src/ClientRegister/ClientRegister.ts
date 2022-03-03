@@ -31,7 +31,7 @@ export default class ClientRegister {
         this.totalLifetimeClientsAdded++;
         const newId = this.idCreator.generateId();
 
-        const newClient = new CameraClientService(newId);
+        const newClient = new CameraClientService(newId,clientId);
         this.registeredClients.set(clientId, newClient);
     }
 
