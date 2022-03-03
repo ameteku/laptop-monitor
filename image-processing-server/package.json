@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "express": "^4.17.3",
-    "firebase-admin": "^10.0.2"
+    "firebase-admin": "^10.0.2",
+    "memfs": "^3.4.1"
   }
 }

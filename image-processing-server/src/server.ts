@@ -3,6 +3,7 @@ import cors from "cors";
 import ClientRegister from './ClientRegister/ClientRegister';
 import ClientDataDelegate from './services/clientDataDelegate';
 import { videoFrame } from './models/videoContainer';
+import { initializeApp, cert } from 'firebase-admin/app';
 
 const app = express();
 const clientRegister = new ClientRegister();
@@ -15,6 +16,13 @@ app.use(express.urlencoded({
     extended: true,
     parameterLimit: 50000
 }));
+
+const serviceAccount = require('../lapnitor-firebase-adminsdk-trb25-09a07e1d3d.json');
+
+        initializeApp({
+            credential: cert(serviceAccount),
+            storageBucket: "gs://lapnitor.appspot.com"
+        });
 
 app.post("/connect", (req, res) => {
     const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).toString();
