@@ -14,18 +14,33 @@ export default class VideoResultsContainer {
             this.count++;
             console.log("Added result to list" + this.resultQueue);
     }
+    get totalResultsCount() {
+        return this.count;
+    }
 
     //removes the last image and return
-    get popQueue(): Array<number> {
-        let tempImageData;
-        tempImageData = this.resultQueue.pop();
+    get popQueue(): Result {
+        const tempImageData =  this.resultQueue.shift();
         this.count--;
         
         return tempImageData;
+    }
+
+    //todo: check for any race conditions with appending new results
+    get allResults(): Array<Result> {
+        const allData = [...this.resultQueue];
+        this.count = 0;
+
+        //clearing all gotten data
+        this.resultQueue.length = 0;
+
+        return allData;
     }
 }
 
 export type Result = {
     containsHuman?: boolean;
-    distanceFromCamera?: number ;
+    distanceFromCamera?: number;
+    timestamp?: Date;
+    imageLink?: string;
 }
