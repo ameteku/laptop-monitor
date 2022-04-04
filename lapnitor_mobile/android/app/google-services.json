@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "109908020922",
+    "project_id": "lapnitor",
+    "storage_bucket": "lapnitor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:109908020922:android:b14f19c3bc74543c9bfc83",
+        "android_client_info": {
+          "package_name": "com.ameteku.laptnitorMobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "109908020922-1sf7kecn88gphcc1p07l2f4sprtrnpto.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0Rqk0bf57N9HZx5jxPuu8ZAWVGGCGzTA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "109908020922-1sf7kecn88gphcc1p07l2f4sprtrnpto.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "109908020922-a449toib3cqiqepra0jjjj37jvdipqis.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ameteku.laptnitorMobile"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
