@@ -75,9 +75,8 @@ export default class CameraClientService {
         const dbDocId = docTimeStamp.toISOString();
 
         const resultKey = result.timestamp.getTime();
-        const jsonData = {
-            [resultKey]: result
-        }
+        const jsonData = result;
+        
 
         //using updateDoc in order to avoid creating duplicate docs - contains addNew doc is doc does not already exist.
         await this.db.updateDoc({
