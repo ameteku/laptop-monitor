@@ -6,8 +6,6 @@ import { videoFrame } from './models/videoContainer';
 import { initializeApp, cert } from 'firebase-admin/app';
 
 const app = express();
-const clientRegister = new ClientRegister();
-const clientDelegate = new ClientDataDelegate(clientRegister);
 app.use(cors())
 
 app.use(express.json({ limit: '50mb' }))
@@ -19,10 +17,13 @@ app.use(express.urlencoded({
 
 const serviceAccount = require('../lapnitor-firebase-adminsdk-trb25-09a07e1d3d.json');
 
-        initializeApp({
-            credential: cert(serviceAccount),
-            storageBucket: "gs://lapnitor.appspot.com"
-        });
+initializeApp({
+    credential: cert(serviceAccount),
+    storageBucket: "gs://lapnitor.appspot.com"
+});
+
+const clientRegister = new ClientRegister();
+const clientDelegate = new ClientDataDelegate(clientRegister);
 
 app.post("/connect", (req, res) => {
     const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).toString();
@@ -45,7 +46,7 @@ app.post("/addVideoFeed", (req, res) => {
     console.log("Called");
     try {
         const body = req.body;
-       
+
         //get data, then validate, then pass on to clientDelegate to store and call for start to process.
         if (body.frames === null || body.frames === undefined || body.id == null || body.id == undefined) {
             res.status(403).send({
@@ -76,7 +77,7 @@ app.post("/addVideoFeed", (req, res) => {
 app.get("/getResults", (req, res) => {
     const id = req.query.id.toString();
     console.log("Id is", id);
-    if(id == null || id === "") {
+    if (id == null || id === "") {
         res.status(403).send({
             result: false,
             message: "please append your id to url"
@@ -85,9 +86,9 @@ app.get("/getResults", (req, res) => {
 
     try {
         const results = clientDelegate.getResults(id);
-            res.status(200).send({
-                processedResults : results
-            });
+        res.status(200).send({
+            processedResults: results
+        });
     }
     catch (error) {
         res.status(500).send({

@@ -38,8 +38,9 @@ export default class VideoResultsContainer {
     }
 }
 
+export type ActivityType = "HumanDetected" | "LaptopMoved";
 export type Result = {
-    containsHuman?: boolean;
+    activityType?: ActivityType;
     distanceFromCamera?: number;
     timestamp?: Date;
     imageLink?: string;

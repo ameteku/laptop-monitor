@@ -29,13 +29,13 @@ export default class StorageConnector {
             return null;
        }
 
-    const destinationPath = params.dbPath + "-" + params.filePath;
+    const destinationPath = params.dbPath + params.filePath;
        return await  StorageConnector.storage.upload(params.filePath, {
             destination: destinationPath
         }).then(e=> {
             return destinationPath;
         }).catch(error=> {
-            console.log("An error occurred whilst uploading")
+            console.log("An error occurred whilst uploading:", error);
             return null;
         });
     }

@@ -1,4 +1,5 @@
 import CameraClientService from "../services/cameraClientService";
+import DBConnector from "../services/dbConnector";
 import IdCreator from "../utility/idCreator";
 
 export default class ClientRegister {
@@ -33,6 +34,7 @@ export default class ClientRegister {
 
         const newClient = new CameraClientService(newId,clientId);
         this.registeredClients.set(clientId, newClient);
+
     }
 
     getClientServiceId(clientId: string): string | null {
