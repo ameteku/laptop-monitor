@@ -19,9 +19,11 @@ export default class CameraClientService {
         this.videoResults = new VideoResultsContainer();
         this.db = new DBConnector();
         this.fileStorage = new StorageConnector();
-
         this.clientId = clientId;
         this.id = id;
+        this.createServiceDBDoc().then(result =>        
+            console.log(result ? "Successfully created service doc" : "Failed to create service doc" )
+        );
     }
 
     addVideoFeed(feed: Array<videoFrame>): void {
@@ -38,23 +40,24 @@ export default class CameraClientService {
 
         while (frame != null) {
 
-            //run frame through nn
+            //todo: run frame through nn
 
             //get results and appedn
             const result: Result = {
-                containsHuman: true,
+                activityType: "HumanDetected",
                 distanceFromCamera: Math.random() * 10,
                 timestamp: new Date(),
             }
 
-            if (result.containsHuman && result.distanceFromCamera < CameraClientService.dangerDistance) {
+            if (result.activityType === "HumanDetected" && result.distanceFromCamera < CameraClientService.dangerDistance) {
                 // this.videoResults.appendResult(result);
                 const buffer = new Buffer(frame)
                 const newFilePath = `potential-threat-${result.timestamp}.png`;
                 fs.writeFileSync(newFilePath, buffer);
+
                 const cloudPath = await this.fileStorage.addFile({
                     filePath: newFilePath,
-                    dbPath: `${this.clientId}/${newFilePath}`
+                    dbPath: `${this.clientId}/`
                 });
 
                 result.imageLink = cloudPath;
@@ -69,7 +72,7 @@ export default class CameraClientService {
 
     private async uploadToDB(result: Result): Promise<void> {
         const docTimeStamp = result.timestamp;
-        const dbDocId = this.clientId + "-" + docTimeStamp.getFullYear() + '-' + docTimeStamp.getMonth() + '-' + docTimeStamp.getDay();
+        const dbDocId = docTimeStamp.toISOString();
 
         const resultKey = result.timestamp.getTime();
         const jsonData = {
@@ -80,7 +83,7 @@ export default class CameraClientService {
         await this.db.updateDoc({
             json: jsonData,
             docId: dbDocId,
-            collectionPath: "userResults"
+            collectionPath: "userResults" + `/${this.clientId}/suspectImages`
         });
     }
 
@@ -88,4 +91,12 @@ export default class CameraClientService {
         return this.videoResults.allResults;
     }
 
+    private async createServiceDBDoc(): Promise<boolean> {
+    return this.db.addDocument({
+        doc: { "id": this.clientId },
+        collectionPath: "userResults",
+        docId: this.clientId
+    });
+
+}
 }
