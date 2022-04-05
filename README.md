@@ -1,2 +1,2 @@
 # laptop-monitor
-An application to turn your laptop camera into an anti theft feature
+An application that turns your laptop camera into an anti theft feature
