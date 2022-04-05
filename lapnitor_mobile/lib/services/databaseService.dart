@@ -39,6 +39,7 @@ class DatabaseService {
     try {
       return db.collection(sessionResultsPath).doc(_laptopId).collection(suspectImagesCollectionPath).snapshots().map((events) {
         if (events.size == 0) return [];
+        print(events.docs[0].data());
         return events.docs
             .map((event) => Event(event["activityType"], event['imageLink'], event['timestamp'], event["distanceFromCamera"]))
             .toList();
