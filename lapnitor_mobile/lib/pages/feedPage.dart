@@ -22,7 +22,7 @@ class _FeedPageState extends State<FeedPage> {
   List<Event> temps = List.generate(
       5,
       (index) => Event("Human is too close", "https://i.dailymail.co.uk/i/pix/2011/06/01/article-1393117-0C5BFD5800000578-215_472x350.jpg",
-          Timestamp.now()));
+          Timestamp.now(), 455));
 
   @override
   void initState() {
