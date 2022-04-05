@@ -18,7 +18,7 @@ export default class DBConnector {
         return DBConnector.db;
     }
 
-   async addDocument(params : { doc :{[key: string]: any} , collectionPath: dbConstants, docId: string  }) : Promise<boolean> {
+   async addDocument(params : { doc :{[key: string]: any} , collectionPath: string, docId: string  }) : Promise<boolean> {
         return await DBConnector.db.collection(params.collectionPath).doc(params.docId).set(params.doc).
                 catch (error=> {
                     console.log("error setting new doc ", error);
@@ -45,7 +45,7 @@ export default class DBConnector {
     }
 
     // todo : add check for key against objects eg. Class, user
-    async updateDoc(params: {json : {[key: string] : any} ,docId: string, collectionPath: dbConstants}) : Promise<boolean> {
+    async updateDoc(params: {json : {[key: string] : any} ,docId: string, collectionPath: string}) : Promise<boolean> {
         return await DBConnector.db.collection(params.collectionPath).doc(params.docId).update(params.json).then(result => {
             return true;
         }).catch(error => {
