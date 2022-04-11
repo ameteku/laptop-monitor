@@ -23,13 +23,13 @@ export default class StorageConnector {
         return StorageConnector.storage;
     }
 
-   async addFile(params : {filePath?: string,  dbPath: string  }) : Promise<string | null> {
+   async addFile(params : {filePath?: string, fileName?: string, dbPath: string  }) : Promise<string | null> {
        let filePath = params.filePath;
        if(filePath == undefined ) {
             return null;
        }
 
-    const destinationPath = params.dbPath + params.filePath;
+    const destinationPath = params.dbPath + (params.fileName ?  params.fileName : params.filePath);
        return await  StorageConnector.storage.upload(params.filePath, {
             destination: destinationPath
         }).then(e=> {
