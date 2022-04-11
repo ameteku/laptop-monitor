@@ -34,7 +34,6 @@ export default class ClientRegister {
 
         const newClient = new CameraClientService(newId,clientId);
         this.registeredClients.set(clientId, newClient);
-
     }
 
     getClientServiceId(clientId: string): string | null {

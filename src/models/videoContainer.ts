@@ -32,4 +32,4 @@ get popQueue(): videoFrame | null {
 
 
 
-export type videoFrame = Array<Array<number>>;
+export type videoFrame = Array<number>;

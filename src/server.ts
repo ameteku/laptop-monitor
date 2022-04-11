@@ -42,20 +42,20 @@ app.post("/connect", (req, res) => {
     });
 });
 
-app.post("/addVideoFeed", (req, res) => {
+app.post("/addVideoFeed", async (req, res) => {
     console.log("Called");
     try {
         const body = req.body;
 
         //get data, then validate, then pass on to clientDelegate to store and call for start to process.
-        if (body.frames === null || body.frames === undefined || body.id == null || body.id == undefined) {
+        if (!body.frames || !body.id) {
             res.status(403).send({
                 result: false,
                 message: "empty field"
             });
         }
 
-        const isSuccessful = clientDelegate.addVideo(body.id, JSON.parse(body.frames));
+        const isSuccessful = await clientDelegate.addVideo(body.id, JSON.parse(body.frames));
         if (isSuccessful) {
             res.status(200).send(true);
         }
@@ -67,6 +67,7 @@ app.post("/addVideoFeed", (req, res) => {
         }
     }
     catch (error) {
+        console.log(error);
         res.status(500).send({
             result: false,
             messsage: `Failed with: ${error}`

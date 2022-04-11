@@ -10,14 +10,15 @@ export default class ClientDataDelegate {
         this.register = register;
     }
 
-    addVideo(clientId: string, videoFrames: Array<videoFrame>): boolean {
+    async addVideo(clientId: string, videoFrames: Array<videoFrame>): Promise<boolean> {
        const clientService = this.register.getClientService(clientId);
+       console.log("addVideo client service:", clientService)
         if(clientService == null) {
             console.log("service does not exist", clientService, "in register: ", this.register);
             return false;
         }
        
-        clientService.addVideoFeed(videoFrames);
+       await clientService.addVideoFeed(videoFrames);
         clientService.processFrames();
         return true;
     }
