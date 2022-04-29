@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lapnitor_mobile/pages/switcher.dart';
 import 'package:lapnitor_mobile/services/databaseService.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class ScanPage extends StatefulWidget {
@@ -26,7 +27,7 @@ class _ScanPageState extends State<ScanPage> {
   @override
   void initState() {
     super.initState();
-    dbService = DatabaseService();
+    dbService = context.read<DatabaseService>();
   }
 
   @override

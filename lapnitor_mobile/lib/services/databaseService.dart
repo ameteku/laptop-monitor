@@ -6,23 +6,23 @@ class DatabaseService {
   static const String sessionResultsPath = "userResults";
   static const String suspectImagesCollectionPath = "suspectImages";
 
-  String? _laptopId = '::1';
+  String? _laptopId;
   bool isConnected = false;
 
   FirebaseFirestore db;
 
   DatabaseService({laptopId}) : db = FirebaseFirestore.instance {
-    if (laptopId != null) {
-      _laptopId = _laptopId;
-    }
+    _laptopId = laptopId;
   }
 
   //arg: qrcode value gotten from scan
   //check in db for that value, if present
-  Future<bool> connectDB(String laptopId) => db.collection(sessionResultsPath).doc(_laptopId).get().then((value) {
-        if (value.data() != null && value.data()!["id"] == _laptopId) {
+  Future<bool> connectDB(String laptopId) => db.collection(sessionResultsPath).doc(laptopId).get().then((value) {
+        print("DOc is ${value.data()}");
+        if (value.data() != null && value.data()!["id"] == laptopId) {
           isConnected = true;
           _laptopId = laptopId;
+
           return true;
         }
         return false;
@@ -31,18 +31,27 @@ class DatabaseService {
         return false;
       });
 
-  get id => _laptopId;
+  get id {
+    print("getting laptopid>>> ${_laptopId}");
+    return _laptopId;
+  }
 
   Stream<List<Event>>? getFeedStream() {
     if (_laptopId == null) return null;
 
+    print("Passed null stage");
+
     try {
       return db.collection(sessionResultsPath).doc(_laptopId).collection(suspectImagesCollectionPath).snapshots().map((events) {
         if (events.size == 0) return [];
-        print(events.docs[0].data());
-        return events.docs
-            .map((event) => Event(event["activityType"], event['imageLink'], event['timestamp'], event["distanceFromCamera"]))
-            .toList();
+
+        print("Events ${events.docs.length}");
+        var items = events.docs.map((event) {
+          var eventData = event.data();
+          return Event(eventData["activityType"], eventData['imageLink'], eventData['timestamp'], eventData["distanceFromCamera"]);
+        });
+        print("Items are ${items.runtimeType}");
+        return items.toList();
       });
     } catch (error) {
       if (kDebugMode) {

@@ -17,10 +17,14 @@ export default class CameraClientService {
     private fileStorage: StorageConnector;
     private bodyDetector: CocoSsd.ObjectDetection;
 
+    //calculated area from measured face in px^2
+    private standardFaceArea = 186165;
+    //measured distance of face from camera in inch
+     private realDistanceFromCamera = 30 ;
+
     id: string;
 
     clientId: string;
-    static dangerDistance = 5;
 
     constructor(id: string, clientId: string) {
         // global.Image = new Canvas.Image()
@@ -61,38 +65,56 @@ export default class CameraClientService {
 
             const itemsDetected = await this.bodyDetector.detect(newImageTensor as Tensor3D, 1);
             console.log("nn said: ", itemsDetected);
+            let closestPerson = Infinity;
+            
+            const humanDetected = itemsDetected.reduce<CocoSsd.DetectedObject >((prev, current) => {
 
-            const humanDetected = itemsDetected.reduce((prev, current) => {
-                if (current.class == "person") {
-                    return current;
+
+                if (current.class == "person" && current.score >= .6) {
+                    //get bounding box height and width
+                    const faceArea = current.bbox[3] * current.bbox[2];
+
+                    //check that against formular for mapping
+                    if(faceArea >= this.standardFaceArea) {
+                        return current;
+                    }
                 }
+
                 return prev;
-            });
+            }, null);
 
-            //todo: add distance detection
 
-            if (humanDetected.class === "person" && 4 < CameraClientService.dangerDistance) {
+           
+            if (humanDetected && humanDetected.class === "person") {
                 // this.videoResults.appendResult(result);
+                console.log(humanDetected, "<<<human detected");
+                const newArea = humanDetected.bbox[3] * humanDetected.bbox[2];
+                const distance = (this.standardFaceArea/newArea) * this.realDistanceFromCamera;
+                console.log("New Distance:", distance, " standDistance: ", this.realDistanceFromCamera, " New Area: ", newArea, " standard area:", this.standardFaceArea);
 
-                //create result object
-                const result: Result = {
-                    activityType: "HumanDetected",
-                    distanceFromCamera: Math.random() * 10,
-                    timestamp: new Date(),
+                if(distance < this.realDistanceFromCamera) {
+
+                    //create result object
+                    const result: Result = {
+                        activityType: "HumanDetected",
+                        distanceFromCamera: Math.random() * 10,
+                        timestamp: new Date(),
+                    }
+
+                    const newFileName = `potential-threat-${result.timestamp}.png`;
+                    const tempFileName = "temp.png";
+                    fs.writeFileSync(tempFileName, tempImageBuffer)
+
+                    const cloudPath = await this.fileStorage.addFile({
+                        filePath: tempFileName,
+                        fileName : newFileName,
+                        dbPath: `${this.clientId}/`
+                    });
+
+                    result.imageLink = cloudPath;
+                    this.uploadToDB(result);
                 }
 
-                const newFileName = `potential-threat-${result.timestamp}.png`;
-                const tempFileName = "temp.png";
-                fs.writeFileSync(tempFileName, tempImageBuffer)
-
-                const cloudPath = await this.fileStorage.addFile({
-                    filePath: tempFileName,
-                    fileName : newFileName,
-                    dbPath: `${this.clientId}/`
-                });
-
-                result.imageLink = cloudPath;
-                this.uploadToDB(result);
             }
 
             frame = this.videoContainer.popQueue;
