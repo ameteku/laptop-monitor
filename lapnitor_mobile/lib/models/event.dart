@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Event {
   Event(this.activity, this.evidenceUrl, this.time, this.distanceFromCamera);
   String activity;
-  String evidenceUrl;
+  String? evidenceUrl;
   Timestamp time;
   double? distanceFromCamera;
 

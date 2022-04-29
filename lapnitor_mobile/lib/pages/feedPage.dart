@@ -26,16 +26,25 @@ class _FeedPageState extends State<FeedPage> {
 
   @override
   void initState() {
-    dbService = context.read<DatabaseService>();
     storageService = StorageService();
+    dbService = context.read<DatabaseService>();
     feed = dbService.getFeedStream();
-
+    print("dbService $dbService");
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     isConnected = dbService.id != null;
+    feed ??= dbService.getFeedStream();
+
+    print("feed ${feed?.first.toString()}");
     return Container(
         color: Colors.white,
         alignment: Alignment.center,
@@ -45,23 +54,25 @@ class _FeedPageState extends State<FeedPage> {
                 builder: (BuildContext context, AsyncSnapshot<List<Event>> snapshot) {
                   print("Data is: ${snapshot.data}");
                   if (snapshot.hasData && snapshot.data != null) {
-                    List<Event>? data = snapshot.data;
+                    List<Event>? data = snapshot.data!.reversed.toList();
 
                     return ListView.builder(
                         itemBuilder: (context, index) {
-                          return FutureBuilder<String>(
-                            future: storageService.getDownloadUrlFromRelativePath(data![index].evidenceUrl),
-                            builder: (BuildContext context, AsyncSnapshot<dynamic> link) {
-                              if (link.hasData == false) {
-                                return const Center(
-                                    child: CircularProgressIndicator(
-                                  color: Colors.black,
-                                ));
-                              }
-                              data[index].evidenceUrl = link.data;
-                              return FeedCard(event: data[index]);
-                            },
-                          );
+                          return data![index].evidenceUrl != null
+                              ? FutureBuilder<String>(
+                                  future: storageService.getDownloadUrlFromRelativePath(data[index].evidenceUrl!),
+                                  builder: (BuildContext context, AsyncSnapshot<dynamic> link) {
+                                    if (link.hasData == false) {
+                                      return const Center(
+                                          child: CircularProgressIndicator(
+                                        color: Colors.black,
+                                      ));
+                                    }
+                                    data[index].evidenceUrl = link.data;
+                                    return FeedCard(event: data[index]);
+                                  },
+                                )
+                              : FeedCard(event: data[index]);
                         },
                         itemCount: data?.length ?? 0);
                   }
@@ -95,7 +106,7 @@ class FeedCard extends StatelessWidget {
           Row(
             children: [const Text("Activity:"), Text(event.activity)],
           ),
-          Image.network(event.evidenceUrl),
+          event.evidenceUrl != null ? Image.network(event.evidenceUrl!) : Text("No image sent"),
           Row(
             children: [const Text("Time: "), Text(DateTime.now().toString())],
           ),

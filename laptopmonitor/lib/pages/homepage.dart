@@ -30,11 +30,13 @@ class _HomePageState extends State<HomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ControlButton(
-                  buttonText: "Connect Phone",
-                  onTap: () {
-                    createAndShowDynamic("Hii", context);
-                  }),
+              _imageServer.hasValue
+                  ? ControlButton(
+                      buttonText: "Connect Phone",
+                      onTap: () {
+                        createAndShowDynamic(_imageServer!.value!.id!, context);
+                      })
+                  : const CircularProgressIndicator(),
               ControlButton(
                   buttonText: isRecording ? "Stop Monitoring" : "Start Monitoring",
                   onTap: () {
