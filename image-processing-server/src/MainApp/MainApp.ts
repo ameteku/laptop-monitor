@@ -13,7 +13,7 @@ export default class MainApp {
     private static  readonly  PORT:number | String  = process.env.PORT || 3000;
     
     constructor() {
-        const serviceAccount = require('../lapnitor-firebase-adminsdk-trb25-09a07e1d3d.json');
+        const serviceAccount = require('../../lapnitor-firebase-adminsdk-trb25-09a07e1d3d.json');
 
         initializeApp({
             credential: cert(serviceAccount),
