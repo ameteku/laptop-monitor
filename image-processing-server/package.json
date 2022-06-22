@@ -2,7 +2,7 @@
   "name": "image-processing-server",
   "version": "1.0.0",
   "description": "The server side code for lapniot",
-  "main": "dist/server.ts",
+  "main": "dist/server.js",
   "scripts": {
     "tsc": "tsc",
     "build": "tsc",
