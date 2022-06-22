@@ -1,7 +1,6 @@
 export default class VideoResultsContainer {
-    private resultQueue: Array<Result>;
     private count: number;
-
+    private resultQueue: Array<Result>;
     constructor() {
         this.resultQueue = [];
         this.count = 0;
@@ -9,7 +8,7 @@ export default class VideoResultsContainer {
     }
 
     //image list is a list of uInt8List
-    appendResult(result: Result ) {
+    private appendResult(result: Result ) {
             this.resultQueue.push(result);
             this.count++;
             console.log("Added result to list" + this.resultQueue);

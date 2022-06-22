@@ -6,16 +6,16 @@ import { Result } from '../models/videoResultsContainer';
 export default class DBConnector {
     static db: FirebaseFirestore.Firestore;
 
+    get database():FirebaseFirestore.Firestore  {
+        return DBConnector.db;
+    }
+
     constructor() {
 
         if(DBConnector.db === undefined) {
             DBConnector.db = getFirestore();
         }
        
-    }
-
-    get database():FirebaseFirestore.Firestore  {
-        return DBConnector.db;
     }
 
    async addDocument(params : { doc :{[key: string]: any} , collectionPath: string, docId: string  }) : Promise<boolean> {

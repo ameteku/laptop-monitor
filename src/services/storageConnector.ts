@@ -5,6 +5,10 @@ import { Bucket } from "@google-cloud/storage";
 export default class StorageConnector {
     static storage: Bucket;
 
+    get storage(): Bucket  {
+        return StorageConnector.storage;
+    }
+
     constructor() {
         const serviceAccount = require('../../lapnitor-firebase-adminsdk-trb25-09a07e1d3d.json');
 
@@ -17,10 +21,6 @@ export default class StorageConnector {
            StorageConnector.storage = getStorage().bucket();
         }
        
-    }
-
-    get storage(): Bucket  {
-        return StorageConnector.storage;
     }
 
    async addFile(params : {filePath?: string, fileName?: string, dbPath: string  }) : Promise<string | null> {
