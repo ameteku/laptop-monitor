@@ -4,7 +4,7 @@
   "description": "The server side code for lapniot",
   "main": "dist/server.js",
   "scripts": {
-    "tsc": "tsc",
+    "tsc": "./node_modules/typescript/bin/tsc",
     "build": "tsc",
     "start": "tsc && node dist/server.js",
     "test": "npm test",
@@ -28,6 +28,5 @@
     "express": "^4.17.3",
     "firebase-admin": "^10.0.2",
     "memfs": "^3.4.1",
-    "typescript": "^4.5.5"
   }
 }
