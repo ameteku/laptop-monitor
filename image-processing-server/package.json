@@ -7,7 +7,8 @@
     "tsc": "tsc",
     "build": "tsc",
     "start": "tsc && node dist/server.js",
-    "test": "npm test"
+    "test": "npm test",
+    "postinstall": "npm run tsc"
   },
   "author": "Michael Ameteku",
   "license": "ISC",
