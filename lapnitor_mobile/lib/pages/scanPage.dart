@@ -16,13 +16,13 @@ class ScanPage extends StatefulWidget {
 }
 
 class _ScanPageState extends State<ScanPage> {
-  String? qrValue;
+  String? qrValue = "::1";
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   Barcode? result;
   QRViewController? controller;
   QRStatus currentQRStatus = QRStatus.waiting;
-  late DatabaseService dbService; //todo : move service up the tree and possibly use a provider
+  late DatabaseService dbService;
 
   @override
   void initState() {
@@ -93,8 +93,9 @@ class _ScanPageState extends State<ScanPage> {
     }
   }
 
-  void _onQRViewCreated(QRViewController controller) {
+  void _onQRViewCreated(QRViewController controller) async {
     this.controller = controller;
+    await tryConnecting();
     controller.scannedDataStream.listen((scanData) async {
       controller.pauseCamera();
       setState(() {
@@ -102,18 +103,22 @@ class _ScanPageState extends State<ScanPage> {
         currentQRStatus = QRStatus.processing;
       });
 
-      bool isConnected = await dbService.connectDB(qrValue!);
-
-      setState(() {
-        if (isConnected) {
-          currentQRStatus = QRStatus.success;
-        } else {
-          currentQRStatus = QRStatus.error;
-        }
-      });
-
-      Future.delayed(const Duration(milliseconds: 10), () => widget.onSwitchPage(Pages.feedPage));
+      await tryConnecting();
     });
+  }
+
+  Future<void> tryConnecting() async {
+    bool isConnected = await dbService.connectDB(qrValue!);
+
+    setState(() {
+      if (isConnected) {
+        currentQRStatus = QRStatus.success;
+      } else {
+        currentQRStatus = QRStatus.error;
+      }
+    });
+
+    Future.delayed(const Duration(milliseconds: 10), () => widget.onSwitchPage(Pages.feedPage));
   }
 
   @override

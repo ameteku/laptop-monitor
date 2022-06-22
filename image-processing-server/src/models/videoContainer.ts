@@ -1,7 +1,6 @@
 export default class VideoContainer {
-    private ImageQueue: Array<videoFrame>;
     private count: number;
-
+    private ImageQueue: Array<videoFrame>;
     constructor() {
         this.ImageQueue = [];
         this.count = 0;

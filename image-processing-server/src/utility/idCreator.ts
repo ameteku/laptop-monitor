@@ -1,5 +1,5 @@
 export default class IdCreator{
-    existingIds: Set<string>;
+    private existingIds: Set<string>;
     constructor() {
         this.existingIds = new Set();
     }

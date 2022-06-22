@@ -16,7 +16,7 @@ class _PageDelegatorState extends State<PageDelegator> {
   @override
   late FeedPage _feedPage;
   late ScanPage _scanPage;
-  late Pages currentPage = Pages.feedPage;
+  late Pages currentPage = Pages.scanPage;
   late DatabaseService db;
 
   @override

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:lapnitor_mobile/models/event.dart';
+import 'package:lapnitor_mobile/models/Event.dart';
 
 class DatabaseService {
   static const String sessionResultsPath = "userResults";
@@ -32,7 +32,7 @@ class DatabaseService {
       });
 
   get id {
-    print("getting laptopid>>> ${_laptopId}");
+    print("getting laptopid>>> $_laptopId");
     return _laptopId;
   }
 
