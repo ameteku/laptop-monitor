@@ -10,26 +10,8 @@ export default class MainApp {
     private app = express();
     private clientDelegate: ClientDataDelegate;
     private clientRegister: ClientRegister;
-    private static  readonly  PORT:number = 3000;
-    getConnectEntryPoint = () => {
-        return this.app.post("/connect", (req, res) => {
-            const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).toString();
-            console.log(ip); // ip address of the user
-            if (!this.clientRegister.isRegisteredClient(ip)) {
-                this.clientRegister.addClientService(ip);
-        
-                res.status(200).send({
-                    id: ip
-                });
-            }
-        
-            res.status(200).send({
-                message: "already registered",
-                id: ip
-            });
-        });
-    }
-
+    private static  readonly  PORT:number | String  = process.env.PORT || 3000;
+    
     constructor() {
         const serviceAccount = require('../lapnitor-firebase-adminsdk-trb25-09a07e1d3d.json');
 
@@ -48,6 +30,24 @@ export default class MainApp {
 
         this.clientRegister = new ClientRegister();
         this.clientDelegate = new ClientDataDelegate(this.clientRegister);
+    }
+
+    getConnectEntryPoint = () => {
+        return this.app.post("/connect", (req, res) => {
+            const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).toString();
+            console.log(ip); // ip address of the user
+            if (!this.clientRegister.isRegisteredClient(ip)) {
+                this.clientRegister.addClientService(ip);
+                res.status(200).send({
+                    id: ip
+                });
+            }
+        
+            res.status(200).send({
+                message: "already registered",
+                id: ip
+            });
+        });
     }
 
     getAddVideoFeedEndpoint() {
