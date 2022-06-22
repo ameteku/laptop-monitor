@@ -1,5 +1,5 @@
-import express from 'express';
 import cors from "cors";
+import express from 'express';
 import { initializeApp, cert } from 'firebase-admin/app';
 import ClientDataDelegate from '../services/clientDataDelegate';
 import ClientRegister from '../ClientRegister/ClientRegister';
