@@ -4,6 +4,7 @@
   "description": "The server side code for lapniot",
   "main": "dist/server.ts",
   "scripts": {
+    "tsc": "tsc",
     "build": "tsc",
     "start": "tsc && node dist/server.js",
     "test": "npm test"
