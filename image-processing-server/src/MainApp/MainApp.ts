@@ -31,6 +31,12 @@ export default class MainApp {
         this.clientRegister = new ClientRegister();
         this.clientDelegate = new ClientDataDelegate(this.clientRegister);
     }
+     
+    getHome() {
+        return this.app.get("/", (req, res) => {
+            res.send("Hellooo");
+        })
+    }
 
     getConnectEntryPoint = () => {
         return this.app.post("/connect", (req, res) => {
