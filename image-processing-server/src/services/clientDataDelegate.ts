@@ -4,7 +4,7 @@ import { Result } from "../models/videoResultsContainer";
 import DBConnector from "./dbConnector";
 
 export default class ClientDataDelegate {
-    register: ClientRegister;
+    private register: ClientRegister;
 
     constructor(register: ClientRegister) {
         this.register = register;

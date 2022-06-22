@@ -11,21 +11,18 @@ import * as tf from '@tensorflow/tfjs-node'
 
 
 export default class CameraClientService {
-    private videoContainer: VideoContainer;
-    private videoResults: VideoResultsContainer;
+    private bodyDetector: CocoSsd.ObjectDetection;
+    private clientId: string;
     private db: DBConnector;
     private fileStorage: StorageConnector;
-    private bodyDetector: CocoSsd.ObjectDetection;
-
+    private videoContainer: VideoContainer;
+    private videoResults: VideoResultsContainer;
     //calculated area from measured face in px^2
     private standardFaceArea = 186165;
     //measured distance of face from camera in inch
      private realDistanceFromCamera = 30 ;
 
     id: string;
-
-    clientId: string;
-
     constructor(id: string, clientId: string) {
         // global.Image = new Canvas.Image()
         this.videoContainer = new VideoContainer();

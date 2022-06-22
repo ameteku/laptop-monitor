@@ -4,12 +4,12 @@ import IdCreator from "../utility/idCreator";
 
 export default class ClientRegister {
 
-    //this contains a map of clientId to clientServiceInstanceId
+    
+    private idCreator: IdCreator;
+//this contains a map of clientId to clientServiceInstanceId
     private registeredClients: Map<string, CameraClientService>;
     private totalLifetimeClientsAdded = 0;
     public clientCount = 0;
-    idCreator: IdCreator;
-    
     constructor() {
         this.registeredClients = new Map<string, CameraClientService>();
         this.idCreator = new IdCreator();
@@ -36,7 +36,7 @@ export default class ClientRegister {
         this.registeredClients.set(clientId, newClient);
     }
 
-    getClientServiceId(clientId: string): string | null {
+    private getClientServiceId(clientId: string): string | null {
         const serviceId = this.registeredClients.get(clientId)?.id;
 
         if(serviceId == null) return null;
@@ -48,7 +48,7 @@ export default class ClientRegister {
         return  this.registeredClients.get(clientId);
     }
 
-    removeClientServiceId(clientId: string): void {
+    private removeClientServiceId(clientId: string): void {
         this.registeredClients.delete(clientId);
         this.clientCount--;
     }
