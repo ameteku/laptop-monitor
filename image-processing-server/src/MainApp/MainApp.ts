@@ -10,6 +10,7 @@ export default class MainApp {
     private app = express();
     private clientDelegate: ClientDataDelegate;
     private clientRegister: ClientRegister;
+    private static  readonly  PORT:number = 3000;
     getConnectEntryPoint = () => {
         return this.app.post("/connect", (req, res) => {
             const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).toString();
@@ -112,7 +113,7 @@ export default class MainApp {
     }
 
     listen() {
-        return this.app.listen(3000, () => {
+        return this.app.listen(MainApp.PORT, () => {
             console.log("listening on 3000");
         });
     }
