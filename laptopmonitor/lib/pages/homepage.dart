@@ -29,27 +29,29 @@ class _HomePageState extends State<HomePage> {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _imageServer.hasValue
-                  ? ControlButton(
-                      buttonText: "Connect Phone",
-                      onTap: () {
-                        createAndShowDynamic(_imageServer!.value!.id!, context);
-                      })
-                  : const CircularProgressIndicator(),
-              ControlButton(
-                  buttonText: isRecording ? "Stop Monitoring" : "Start Monitoring",
-                  onTap: () {
-                    if (!isRecording) {
-                      _imageServer.value!.startSending();
-                    } else {
-                      _imageServer.value!.stopSending();
-                    }
-                    setState(() {
-                      isRecording = !isRecording;
-                    });
-                  }),
-            ],
+            children: _imageServer.hasValue
+                ? [
+                    ControlButton(
+                        buttonText: "Connect Phone",
+                        onTap: () {
+                          createAndShowDynamic(_imageServer.value!.id!, context);
+                        }),
+                    ControlButton(
+                        buttonText: isRecording ? "Stop Monitoring" : "Start Monitoring",
+                        onTap: () {
+                          if (!isRecording) {
+                            _imageServer.value!.startSending();
+                          } else {
+                            _imageServer.value!.stopSending();
+                          }
+                          setState(() {
+                            isRecording = !isRecording;
+                          });
+                        }),
+                  ]
+                : [
+                    const Center(child: CircularProgressIndicator()),
+                  ],
           ),
           const Divider(
             height: 10,

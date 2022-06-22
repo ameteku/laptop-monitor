@@ -16,7 +16,7 @@ class ImageServer {
   BehaviorSubject<bool> started;
   final CameraFeedService _cameraFeedService;
   List<Uint8List> _currentRawImageData;
-  String kServerBaseLink = "http://localhost:3000";
+  String kServerBaseLink = "http://lapnitor.herokuapp.com";
   String? id;
 
   ImageServer(this._cameraFeedService)
@@ -70,8 +70,10 @@ class ImageServer {
 
   //make connection to server;
   Future<void> connectToServer() async {
-    var response = await http.post(Uri.parse(kServerBaseLink + '/connect'),
-        headers: {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"});
+    var response = await http.post(Uri.parse(kServerBaseLink + '/connect'), headers: {
+      "Access-Control-Allow-Origin": "www.lapnitor.herokuapp.com",
+      "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
+    });
     print("established connection? : ${response.statusCode} ${response.body}");
     if (response.statusCode == 200) {
       id = jsonDecode(response.body)["id"];
@@ -83,7 +85,11 @@ class ImageServer {
     if (_currentRawImageData.isEmpty) return;
     var jsonData = {"frames": jsonEncode(_currentRawImageData), "id": id};
     var response = await http.post(Uri.parse(kServerBaseLink + '/addVideoFeed'),
-        headers: {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"}, body: jsonData);
+        headers: {
+          "Access-Control-Allow-Origin": "www.lapnitor.herokuapp.com",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
+        },
+        body: jsonData);
     print("completed 1 session?: ${response.statusCode} ${response.body}");
   }
 }
