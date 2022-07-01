@@ -10,19 +10,22 @@ export default class MainApp {
     private app = express();
     private clientDelegate: ClientDataDelegate;
     private clientRegister: ClientRegister;
+    private baseHeaders =   {
+        "Access-Control-Allow-Origin" : "https://lapnitor.web.app"
+    }
     getConnectEntryPoint = () => {
         return this.app.post("/connect", (req, res) => {
             const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).toString();
             console.log(ip); // ip address of the user
             if (!this.clientRegister.isRegisteredClient(ip)) {
                 this.clientRegister.addClientService(ip);
-        
-                res.status(200).send({
+    
+                res.status(200).setHeader("Access-Control-Allow-Origin" ,"https://lapnitor.web.app").send({
                     id: ip
                 });
             }
         
-            res.status(200).send({
+            res.status(200).setHeader("Access-Control-Allow-Origin" ,"https://lapnitor.web.app").send({
                 message: "already registered",
                 id: ip
             });
@@ -57,7 +60,7 @@ export default class MainApp {
         
                 //get data, then validate, then pass on to clientDelegate to store and call for start to process.
                 if (!body.frames || !body.id) {
-                    res.status(403).send({
+                    res.status(403).setHeader("Access-Control-Allow-Origin" ,"https://lapnitor.web.app").send({
                         result: false,
                         message: "empty field"
                     });
@@ -65,10 +68,10 @@ export default class MainApp {
         
                 const isSuccessful = await this.clientDelegate.addVideo(body.id, JSON.parse(body.frames));
                 if (isSuccessful) {
-                    res.status(200).send(true);
+                    res.status(200)..setHeader("Access-Control-Allow-Origin" ,"https://lapnitor.web.app").send(true);
                 }
                 else {
-                    res.status(503).send({
+                    res.status(503).setHeader("Access-Control-Allow-Origin" ,"https://lapnitor.web.app").send({
                         result: false,
                         message: "failed to add"
                     });
