@@ -4,24 +4,24 @@ import { initializeApp, cert } from 'firebase-admin/app';
 import ClientDataDelegate from '../services/clientDataDelegate';
 import ClientRegister from '../ClientRegister/ClientRegister';
 
-
-
 export default class MainApp {
     private app = express();
     private clientDelegate: ClientDataDelegate;
     private clientRegister: ClientRegister;
     private static  readonly  PORT:number | String  = process.env.PORT || 3000;
-    
+    private readonly corsOptions = {
+        origin: 'https://lapnitor.web.app',
+        optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+      } 
     constructor() {
         const serviceAccount = require('../../lapnitor-firebase-adminsdk-trb25-09a07e1d3d.json');
 
         initializeApp({
-            
             credential: cert(serviceAccount),
             storageBucket: "gs://lapnitor.appspot.com"
         });
 
-        this.app.use(cors())
+        this.app.use(cors(this.corsOptions))
         this.app.use(express.json({ limit: '50mb' }))
         this.app.use(express.urlencoded({
             limit: '50mb',
@@ -32,11 +32,13 @@ export default class MainApp {
         this.clientRegister = new ClientRegister();
         this.clientDelegate = new ClientDataDelegate(this.clientRegister);
     }
-     
+
     getHome() {
         return this.app.get("/", (req, res) => {
-            res.send("Hellooo");
-        })
+            res.header({
+
+            }).send("Hellooo");
+        });
     }
 
     getConnectEntryPoint = () => {
